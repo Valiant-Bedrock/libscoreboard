@@ -50,7 +50,10 @@ class Scoreboard {
 		return $this->visible;
 	}
 
-	public function send(DisplaySlot $slot, SortOrder $order): void {
+	public function send(?DisplaySlot $slot = null, ?SortOrder $order = null): void {
+        // If no arguments are passed, we'll set default ones
+        $slot = $slot ?? DisplaySlot::SIDEBAR();
+        $order = $order ?? SortOrder::ASCENDING();
 		if($this->visible) {
 			return;
 		}
