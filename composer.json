@@ -2,7 +2,7 @@
     "name": "valiant-bedrock/libscoreboard",
     "description": "A small scoreboard library built for Minecraft: Bedrock Edition",
     "type": "library",
-    "license": "proprietary",
+    "license": "GNU-AGPLv3",
     "version": "0.1.0",
     "autoload": {
         "psr-4": {
