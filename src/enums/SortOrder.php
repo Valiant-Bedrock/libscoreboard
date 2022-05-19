@@ -19,27 +19,23 @@ use pocketmine\utils\EnumTrait;
  * @method static SortOrder ASCENDING()
  * @method static SortOrder DESCENDING()
  */
-class SortOrder
-{
-    use EnumTrait {
-        __construct as private Enum__construct;
-    }
+class SortOrder {
+	use EnumTrait {
+		__construct as private Enum__construct;
+	}
 
-    protected static function setup(): void
-    {
-        self::registerAll(
-            new SortOrder("ascending", 0),
-            new SortOrder("descending", 1)
-        );
-    }
+	protected static function setup(): void {
+		self::registerAll(
+			new SortOrder("ascending", 0),
+			new SortOrder("descending", 1)
+		);
+	}
 
-    public function __construct(string $enumName, protected int $ordinal)
-    {
-        $this->Enum__construct($enumName);
-    }
+	public function __construct(string $enumName, protected int $ordinal) {
+		$this->Enum__construct($enumName);
+	}
 
-    public function ordinal(): int
-    {
-        return $this->ordinal;
-    }
+	public function ordinal(): int {
+		return $this->ordinal;
+	}
 }

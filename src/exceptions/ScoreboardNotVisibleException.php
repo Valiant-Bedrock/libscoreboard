@@ -15,7 +15,6 @@ namespace libscoreboard\exceptions;
 
 use RuntimeException;
 
-class ScoreboardNotVisibleException extends RuntimeException
-{
+class ScoreboardNotVisibleException extends RuntimeException {
 
 }
