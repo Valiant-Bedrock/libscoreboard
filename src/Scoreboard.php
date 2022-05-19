@@ -115,11 +115,11 @@ class Scoreboard {
 	 * Sets a single line on the scoreboard
 	 *
 	 * @param int $index
-	 * @param string $name
+	 * @param string $value
 	 * @param bool $update
 	 * @return void
 	 */
-	public function setLine(int $index, string $name, bool $update = true): void {
+	public function setLine(int $index, string $value, bool $update = true): void {
 		if($index < 0 or $index >= self::MAX_LINE_COUNT) {
 			throw new InvalidArgumentException("Invalid index $index");
 		}
@@ -131,9 +131,9 @@ class Scoreboard {
 
 		$this->player->getNetworkSession()->sendDataPacket(SetScorePacket::create(
 			type: SetScorePacket::TYPE_CHANGE,
-			entries: [self::createEntry($index, $name)]
+			entries: [self::createEntry($index, $value)]
 		));
-		$this->lines[$index] = $name;
+		$this->lines[$index] = $value;
 		if($this->visible && $update) $this->update();
 	}
 
@@ -174,7 +174,7 @@ class Scoreboard {
 		));
 		$this->lines = [];
 
-		if($this->visible) $this->update();
+		if($this->visible && $update) $this->update();
 	}
 
 	/**
@@ -194,14 +194,14 @@ class Scoreboard {
 		));
 	}
 
-	protected static function createEntry(int $index, string $name): ScorePacketEntry {
+	protected static function createEntry(int $index, string $value): ScorePacketEntry {
 		$entry = new ScorePacketEntry();
 		$entry->type = ScorePacketEntry::TYPE_FAKE_PLAYER;
 		$entry->objectiveName = self::OBJECTIVE_NAME;
 		$entry->scoreboardId = $index;
 		$entry->score = $index;
 		// Add zero-padding according to the index for the scoreboard as to ensure all lines show up properly
-		$entry->customName = $name . str_repeat("\0", $index);
+		$entry->customName = $value . str_repeat("\0", $index);
 		return $entry;
 	}
 }
