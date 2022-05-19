@@ -1,0 +1,202 @@
+<?php
+/**
+ *
+ * Copyright (C) 2020 - 2022 | Matthew Jordan
+ *
+ * This program is private software. You may not redistribute this software, or
+ * any derivative works of this software, in source or binary form, without
+ * the express permission of the owner.
+ *
+ * @author sylvrs
+ */
+declare(strict_types=1);
+
+namespace libscoreboard;
+
+use InvalidArgumentException;
+use libscoreboard\enums\DisplaySlot;
+use libscoreboard\enums\SortOrder;
+use libscoreboard\exceptions\ScoreboardNotVisibleException;
+use pocketmine\network\mcpe\protocol\RemoveObjectivePacket;
+use pocketmine\network\mcpe\protocol\SetDisplayObjectivePacket;
+use pocketmine\network\mcpe\protocol\SetScorePacket;
+use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
+use pocketmine\player\Player;
+
+class Scoreboard
+{
+    public const MAX_LINE_COUNT = 15;
+    /** Constants used when sending the scoreboard to a player */
+    protected const OBJECTIVE_NAME = "scoreboard";
+    protected const CRITERIA_NAME = "dummy";
+
+    protected ?DisplaySlot $currentSlot = null;
+    protected ?SortOrder $currentOrder = null;
+    /** @var bool - Returns true if the player can currently see the scoreboard */
+    protected bool $visible = false;
+
+    /**
+     * @param Player $player
+     * @param string $title
+     * @param array<int, string> $lines
+     */
+    public function __construct(
+        protected Player $player,
+        protected string $title,
+        protected array $lines = []
+    )
+    {
+    }
+
+    public function send(DisplaySlot $slot, SortOrder $order): void
+    {
+        if($this->visible) {
+            return;
+        }
+
+        $this->player->getNetworkSession()->sendDataPacket(SetDisplayObjectivePacket::create(
+            displaySlot: $slot->name(),
+            objectiveName: self::OBJECTIVE_NAME,
+            displayName: $this->title,
+            criteriaName: self::CRITERIA_NAME,
+            sortOrder: $order->ordinal(),
+        ));
+
+        // Update scoreboard properties as needed
+        $this->currentSlot = $slot;
+        $this->currentOrder = $order;
+        $this->visible = true;
+    }
+
+    public function remove(): void
+    {
+        if(!$this->visible) {
+            return;
+        }
+        $this->player->getNetworkSession()->sendDataPacket(RemoveObjectivePacket::create(
+            objectiveName: self::OBJECTIVE_NAME
+        ));
+
+        $this->currentSlot = null;
+        $this->currentOrder = null;
+        $this->visible = false;
+    }
+
+    /**
+     * @param array<int, string> $lines
+     * @param bool $clear - If true, will clear the scoreboard before setting the new lines
+     * @return void
+     * @throws InvalidArgumentException|ScoreboardNotVisibleException
+     */
+    public function setLines(array $lines, bool $clear = true): void
+    {
+        if(count($lines) > self::MAX_LINE_COUNT) {
+            throw new InvalidArgumentException("Scoreboard lines cannot be more than " . self::MAX_LINE_COUNT . " lines");
+        }
+
+        if($clear) $this->clear();
+        $this->player->getNetworkSession()->sendDataPacket(SetScorePacket::create(
+            type: SetScorePacket::TYPE_CHANGE,
+            entries: array_map(
+                fn(int $index, string $line) => self::createEntry($index, $line),
+                array_keys($lines),
+                array_values($lines)
+            )
+        ));
+        $this->lines = $lines;
+        if($this->visible) $this->update();
+    }
+
+    /**
+     * @param int $index
+     * @param string $name
+     * @return void
+     * @throws InvalidArgumentException|ScoreboardNotVisibleException
+     */
+    public function setLine(int $index, string $name): void
+    {
+        if($index < 0 or $index >= self::MAX_LINE_COUNT) {
+            throw new InvalidArgumentException("Invalid index $index");
+        }
+
+        // Remove line before sending a new one
+        if(isset($this->lines[$index])) {
+            $this->removeLine($index);
+        }
+
+        $this->player->getNetworkSession()->sendDataPacket(SetScorePacket::create(
+            type: SetScorePacket::TYPE_CHANGE,
+            entries: [self::createEntry($index, $name)]
+        ));
+        $this->lines[$index] = $name;
+        if($this->visible) $this->update();
+    }
+
+    /**
+     * @param int $index
+     * @return void
+     * @throws InvalidArgumentException|ScoreboardNotVisibleException
+     */
+    public function removeLine(int $index): void
+    {
+        if($index < 0 or $index >= self::MAX_LINE_COUNT) {
+            throw new InvalidArgumentException("Invalid index $index");
+        }
+        $this->player->getNetworkSession()->sendDataPacket(SetScorePacket::create(
+            type: SetScorePacket::TYPE_REMOVE,
+            entries: [self::createEntry($index, "")]
+        ));
+        unset($this->lines[$index]);
+
+        if($this->visible) $this->update();
+    }
+
+    /**
+     * @return void
+     * @throws ScoreboardNotVisibleException
+     */
+    public function clear(): void
+    {
+        $this->player->getNetworkSession()->sendDataPacket(SetScorePacket::create(
+            type: SetScorePacket::TYPE_REMOVE,
+            entries: array_map(
+                fn(int $index, string $line) => self::createEntry($index, ""),
+                array_keys($this->lines),
+                array_values($this->lines)
+            )
+        ));
+        $this->lines = [];
+
+        if($this->visible) $this->update();
+    }
+
+    /**
+     * @throws ScoreboardNotVisibleException
+     */
+    public function update(): void
+    {
+        if(!$this->visible) {
+            throw new ScoreboardNotVisibleException("Cannot update scoreboard when it is not visible");
+        }
+
+        $this->player->getNetworkSession()->sendDataPacket(SetDisplayObjectivePacket::create(
+            displaySlot: $this->currentSlot?->name(),
+            objectiveName: self::OBJECTIVE_NAME,
+            displayName: $this->title,
+            criteriaName: self::CRITERIA_NAME,
+            sortOrder: $this->currentOrder?->ordinal(),
+        ));
+    }
+
+    protected static function createEntry(int $index, string $name): ScorePacketEntry
+    {
+        $entry = new ScorePacketEntry();
+        $entry->type = ScorePacketEntry::TYPE_FAKE_PLAYER;
+        $entry->objectiveName = self::OBJECTIVE_NAME;
+        $entry->scoreboardId = $index;
+        $entry->score = $index;
+        // Add zero-padding according to the index for the scoreboard as to ensure all lines show up properly
+        $entry->customName = $name . str_repeat("\0", $index);
+        return $entry;
+    }
+}
