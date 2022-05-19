@@ -20,16 +20,14 @@ use pocketmine\utils\EnumTrait;
  * @method static DisplaySlot LIST()
  * @method static DisplaySlot SIDEBAR()
  */
-class DisplaySlot
-{
-    use EnumTrait;
+class DisplaySlot{
+	use EnumTrait;
 
-    protected static function setup(): void
-    {
-        self::registerAll(
-            new DisplaySlot("belowname"),
-            new DisplaySlot("list"),
-            new DisplaySlot("sidebar")
-        );
-    }
+	protected static function setup(): void {
+		self::registerAll(
+			new DisplaySlot("belowname"),
+			new DisplaySlot("list"),
+			new DisplaySlot("sidebar")
+		);
+	}
 }
