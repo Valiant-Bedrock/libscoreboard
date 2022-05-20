@@ -22,6 +22,7 @@ use pocketmine\network\mcpe\protocol\SetDisplayObjectivePacket;
 use pocketmine\network\mcpe\protocol\SetScorePacket;
 use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
 use pocketmine\player\Player;
+use RuntimeException;
 
 class Scoreboard {
 
@@ -225,11 +226,11 @@ class Scoreboard {
 		}
 
 		$this->player->getNetworkSession()->sendDataPacket(SetDisplayObjectivePacket::create(
-			displaySlot: $this->currentSlot?->name(),
+			displaySlot: $this->currentSlot?->name() ?? throw new RuntimeException("Scoreboard slot is not set"),
 			objectiveName: self::OBJECTIVE_NAME,
 			displayName: $this->title,
 			criteriaName: self::CRITERIA_NAME,
-			sortOrder: $this->currentOrder?->ordinal(),
+			sortOrder: $this->currentOrder?->ordinal() ?? throw new RuntimeException("Scoreboard order is not set")
 		));
 	}
 
