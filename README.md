@@ -2,6 +2,8 @@
 A small scoreboard library built for Minecraft: Bedrock Edition
 
 ## Installation
+### Composer
+Run the command `composer require valiant-bedrock/libscoreboard` to install this package.
 ### Virion
 The virion for this project is located & can be installed from [here](https://poggit.pmmp.io/ci/Valiant-Bedrock/libscoreboard/libscoreboard)
 
