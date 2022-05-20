@@ -1,0 +1,22 @@
+name: Continuous Integration
+on: [push]
+env:
+  PHP_ARTIFACT_NAME: PHP-8.0-Linux-x86_64.tar.gz
+  PHP_PATH: ./bin/php7/bin
+  PHP_BINARY_PATH: ./bin/php7/bin/php
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download PHP
+        run: wget "https://jenkins.pmmp.io/job/PHP-8.0-Aggregate/lastSuccessfulBuild/artifact/${{ env.PHP_ARTIFACT_NAME }}"
+      - name: Untar PHP
+        run: tar -xzvf ${{ env.PHP_ARTIFACT_NAME }} -C ./
+      - name: Install Composer
+        run: curl -sS https://getcomposer.org/installer | ${{ env.PHP_BINARY_PATH }}
+      - name: Install Composer dependencies
+        run: ${{ env.PHP_BINARY_PATH }} composer.phar install --prefer-dist --no-interaction
+      # PHPStan
+      - name: Run PHPStan
+        run: ./vendor/bin/phpstan analyze
