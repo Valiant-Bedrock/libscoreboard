@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c3f8b7afd0cdb32db1ff41a86853ce0a",
+    "content-hash": "dfb74a4f3d592b4ef2a3c636b4e53a30",
     "packages": [],
     "packages-dev": [
         {
@@ -247,6 +247,66 @@
                 "source": "https://github.com/cweiske/jsonmapper/tree/v4.0.0"
             },
             "time": "2020-12-01T19:48:11+00:00"
+        },
+        {
+            "name": "phpstan/phpstan",
+            "version": "1.7.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpstan.git",
+                "reference": "2571e65e204dfadb6399e66dd5942d4beb637f49"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/2571e65e204dfadb6399e66dd5942d4beb637f49",
+                "reference": "2571e65e204dfadb6399e66dd5942d4beb637f49",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2|^8.0"
+            },
+            "conflict": {
+                "phpstan/phpstan-shim": "*"
+            },
+            "default-branch": true,
+            "bin": [
+                "phpstan",
+                "phpstan.phar"
+            ],
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPStan - PHP Static Analysis Tool",
+            "support": {
+                "issues": "https://github.com/phpstan/phpstan/issues",
+                "source": "https://github.com/phpstan/phpstan/tree/1.7.x"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/ondrejmirtes",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/phpstan",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/phpstan",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/phpstan/phpstan",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-05-19T21:42:48+00:00"
         },
         {
             "name": "pocketmine/bedrock-data",
@@ -1317,7 +1377,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "phpstan/phpstan": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
