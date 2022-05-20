@@ -124,7 +124,7 @@ class Scoreboard {
     }
 
 	/**
-	 * Sets the lines of the scoreboard
+	 * This methods sets the lines of the scoreboard
 	 *
 	 * @param array<int, string> $lines
 	 * @param bool $clear - If true, will clear the scoreboard before setting the new lines
@@ -150,7 +150,7 @@ class Scoreboard {
 	}
 
 	/**
-	 * Sets a single line on the scoreboard
+	 * This method sets a single line on the scoreboard
 	 *
 	 * @param int $index
 	 * @param string $value
@@ -176,7 +176,7 @@ class Scoreboard {
 	}
 
 	/**
-	 * Removes a line from the scoreboard
+	 * This method removes a line from the scoreboard
 	 *
 	 * @param int $index
 	 * @param bool $update
@@ -216,7 +216,7 @@ class Scoreboard {
 	}
 
 	/**
-     * Attempts to update the scoreboard with the current values
+     * This method attempts to update the scoreboard with the current values
      *
 	 * @throws ScoreboardNotVisibleException - If the scoreboard isn't visible, this exception will be thrown
 	 */
