@@ -4,7 +4,6 @@ branches:
 - master
 projects:
   libscoreboard:
-    path: ""
     model: virion
     type: library
 ...
