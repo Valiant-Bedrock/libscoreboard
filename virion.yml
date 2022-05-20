@@ -1,0 +1,8 @@
+name: libscoreboard
+description: A small scoreboard library built for PocketMine-MP
+authors:
+  - sylvrs
+version: 0.5.0
+php:
+  - 8.0
+antigen: libscoreboard
