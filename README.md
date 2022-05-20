@@ -21,7 +21,7 @@ This library provides two types of enums used when sending the scoreboard:
 
 ### Setting Data
 This library provides multiple methods for updating the scoreboard:
-- `setLines(array $lines, bool $update = true): void` - Sets the values of all lines
+- `setLines(array $lines, bool $clear = true, bool $update = true): void` - Sets the values of all lines
 - `setLine(int $index, string $value, bool $update = true): void` - Sets the value of a specific line
 - `removeLine(int $index, bool $update = true): void` - Removes a specific line
 - `clear(bool $update = true): void` - Clears the scoreboard
