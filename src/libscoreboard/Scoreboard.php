@@ -52,17 +52,17 @@ class Scoreboard {
 		return $this->visible;
 	}
 
-    /**
-     * This method sends the scoreboard to the player if not visible
-     *
-     * @param DisplaySlot|null $slot
-     * @param SortOrder|null $order
-     * @return void
-     */
+	/**
+	 * This method sends the scoreboard to the player if not visible
+	 *
+	 * @param DisplaySlot|null $slot
+	 * @param SortOrder|null $order
+	 * @return void
+	 */
 	public function send(?DisplaySlot $slot = null, ?SortOrder $order = null): void {
-        // If no arguments are passed, we'll set default ones
-        $slot = $slot ?? DisplaySlot::SIDEBAR();
-        $order = $order ?? SortOrder::ASCENDING();
+		// If no arguments are passed, we'll set default ones
+		$slot = $slot ?? DisplaySlot::SIDEBAR();
+		$order = $order ?? SortOrder::ASCENDING();
 		if($this->visible) {
 			return;
 		}
@@ -81,11 +81,11 @@ class Scoreboard {
 		$this->visible = true;
 	}
 
-    /**
-     * This method removes the scoreboard from the client (if visible)
-     *
-     * @return void
-     */
+	/**
+	 * This method removes the scoreboard from the client (if visible)
+	 *
+	 * @return void
+	 */
 	public function remove(): void {
 		if(!$this->visible) {
 			return;
@@ -99,29 +99,29 @@ class Scoreboard {
 		$this->visible = false;
 	}
 
-    /**
-     * This method updates the current sorting order
-     *
-     * @param SortOrder $order
-     * @param bool $update
-     * @return void
-     */
-    public function setSortOrder(SortOrder $order, bool $update = true): void {
-        $this->currentOrder = $order;
-        if($this->visible && $update) $this->update();
-    }
+	/**
+	 * This method updates the current sorting order
+	 *
+	 * @param SortOrder $order
+	 * @param bool $update
+	 * @return void
+	 */
+	public function setSortOrder(SortOrder $order, bool $update = true): void {
+		$this->currentOrder = $order;
+		if($this->visible && $update) $this->update();
+	}
 
-    /**
-     * This method updates the current display slot
-     *
-     * @param DisplaySlot $slot
-     * @param bool $update
-     * @return void
-     */
-    public function setDisplaySlot(DisplaySlot $slot, bool $update = true): void {
-        $this->currentSlot = $slot;
-        if($this->visible && $update) $this->update();
-    }
+	/**
+	 * This method updates the current display slot
+	 *
+	 * @param DisplaySlot $slot
+	 * @param bool $update
+	 * @return void
+	 */
+	public function setDisplaySlot(DisplaySlot $slot, bool $update = true): void {
+		$this->currentSlot = $slot;
+		if($this->visible && $update) $this->update();
+	}
 
 	/**
 	 * This method sets the lines of the scoreboard
@@ -216,8 +216,8 @@ class Scoreboard {
 	}
 
 	/**
-     * This method attempts to update the scoreboard with the current values
-     *
+	 * This method attempts to update the scoreboard with the current values
+	 *
 	 * @throws ScoreboardNotVisibleException - If the scoreboard isn't visible, this exception will be thrown
 	 */
 	public function update(): void {
@@ -234,14 +234,14 @@ class Scoreboard {
 		));
 	}
 
-    /**
-     * Given an index and string value, this static method will create a score packet entry
-     * This method is mainly used to create entries for the scoreboard
-     *
-     * @param int $index
-     * @param string $value
-     * @return ScorePacketEntry
-     */
+	/**
+	 * Given an index and string value, this static method will create a score packet entry
+	 * This method is mainly used to create entries for the scoreboard
+	 *
+	 * @param int $index
+	 * @param string $value
+	 * @return ScorePacketEntry
+	 */
 	protected static function createEntry(int $index, string $value): ScorePacketEntry {
 		$entry = new ScorePacketEntry();
 		$entry->type = ScorePacketEntry::TYPE_FAKE_PLAYER;
