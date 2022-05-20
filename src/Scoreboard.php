@@ -24,6 +24,7 @@ use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
 use pocketmine\player\Player;
 
 class Scoreboard {
+
 	public const MAX_LINE_COUNT = 15;
 	/** Constants used when sending the scoreboard to a player */
 	protected const OBJECTIVE_NAME = "scoreboard";
