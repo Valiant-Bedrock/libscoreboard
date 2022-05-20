@@ -1,6 +1,10 @@
 # libscoreboard
 A small scoreboard library built for Minecraft: Bedrock Edition
 
+## Installation
+### Virion
+The virion for this project is located & can be installed from [here](https://poggit.pmmp.io/ci/Valiant-Bedrock/libscoreboard/libscoreboard)
+
 ## Enums
 This library provides two types of enums used when sending the scoreboard:
 - `DisplaySlot` - Used to specify where the scoreboard should be displayed
@@ -66,3 +70,7 @@ $scoreboard->setSortOrder(SortOrder::DESCENDING());
 // Removes the scoreboard from the player's view
 $scoreboard->remove();
 ```
+
+
+## Issues
+Any issues / suggestions with this library can be reported [here](https://github.com/Valiant-Bedrock/libscoreboard/issues).
