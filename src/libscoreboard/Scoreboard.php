@@ -124,7 +124,7 @@ class Scoreboard {
     }
 
 	/**
-	 * This methods sets the lines of the scoreboard
+	 * This method sets the lines of the scoreboard
 	 *
 	 * @param array<int, string> $lines
 	 * @param bool $clear - If true, will clear the scoreboard before setting the new lines
