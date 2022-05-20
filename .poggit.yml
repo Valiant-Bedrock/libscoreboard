@@ -1,0 +1,10 @@
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/Valiant-Bedrock/libscoreboard
+build-by-default: true
+branches:
+- master
+projects:
+  libscoreboard:
+    path: ""
+    model: virion
+    type: library
+...
