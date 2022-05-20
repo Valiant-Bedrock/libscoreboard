@@ -9,6 +9,9 @@
             "libscoreboard\\": "src/libscoreboard"
         }
     },
+    "scripts": {
+        "analyze": "./vendor/bin/phpstan analyze"
+    },
     "authors": [
         {
             "name": "Matthew Jordan",
@@ -19,6 +22,7 @@
     "require": {},
     "require-dev": {
         "pocketmine/pocketmine-mp": ">=4.3.0",
-        "pocketmine/bedrock-protocol": ">=9.0.0+bedrock-1.18.30"
+        "pocketmine/bedrock-protocol": ">=9.0.0+bedrock-1.18.30",
+        "phpstan/phpstan": ">=1.6.x-dev"
     }
 }
