@@ -63,7 +63,7 @@ class Scoreboard {
 		// If no arguments are passed, we'll set default ones
 		$slot = $slot ?? DisplaySlot::SIDEBAR();
 		$order = $order ?? SortOrder::ASCENDING();
-		if($this->visible) {
+		if($this->visible || !$this->player->isConnected()) {
 			return;
 		}
 
@@ -87,7 +87,7 @@ class Scoreboard {
 	 * @return void
 	 */
 	public function remove(): void {
-		if(!$this->visible) {
+		if(!$this->visible || !$this->player->isConnected()) {
 			return;
 		}
 		$this->player->getNetworkSession()->sendDataPacket(RemoveObjectivePacket::create(
@@ -132,6 +132,9 @@ class Scoreboard {
 	 * @return void
 	 */
 	public function setLines(array $lines, bool $clear = true, bool $update = true): void {
+		if (!$this->player->isConnected()) {
+			return;
+		}
 		if(count($lines) > self::MAX_LINE_COUNT) {
 			throw new InvalidArgumentException("Scoreboard lines cannot be more than " . self::MAX_LINE_COUNT . " lines");
 		}
@@ -158,6 +161,10 @@ class Scoreboard {
 	 * @return void
 	 */
 	public function setLine(int $index, string $value, bool $update = true): void {
+		if (!$this->player->isConnected()) {
+			return;
+		}
+
 		if($index < 0 or $index >= self::MAX_LINE_COUNT) {
 			throw new InvalidArgumentException("Invalid index $index");
 		}
@@ -186,6 +193,9 @@ class Scoreboard {
 		if($index < 0 or $index >= self::MAX_LINE_COUNT) {
 			throw new InvalidArgumentException("Invalid index $index");
 		}
+		if (!$this->player->isConnected()) {
+			return;
+		}
 		$this->player->getNetworkSession()->sendDataPacket(SetScorePacket::create(
 			type: SetScorePacket::TYPE_REMOVE,
 			entries: [self::createEntry($index, "")]
@@ -202,6 +212,9 @@ class Scoreboard {
 	 * @return void
 	 */
 	public function clear(bool $update = true): void {
+		if (!$this->player->isConnected()) {
+			return;
+		}
 		$this->player->getNetworkSession()->sendDataPacket(SetScorePacket::create(
 			type: SetScorePacket::TYPE_REMOVE,
 			entries: array_map(
@@ -224,7 +237,9 @@ class Scoreboard {
 		if(!$this->visible) {
 			throw new ScoreboardNotVisibleException("Cannot update scoreboard when it is not visible. Please use Scoreboard->send() before attempting to update it");
 		}
-
+		if (!$this->player->isConnected()) {
+			return;
+		}
 		$this->player->getNetworkSession()->sendDataPacket(SetDisplayObjectivePacket::create(
 			displaySlot: $this->currentSlot?->name() ?? throw new RuntimeException("Scoreboard slot is not set"),
 			objectiveName: self::OBJECTIVE_NAME,
