@@ -1,16 +1,21 @@
 name: Continuous Integration
 on: [push]
 env:
-  PHP_ARTIFACT_NAME: PHP-8.0-Linux-x86_64.tar.gz
+  # PHP environment variables used for downloading, extraction, and running PHP
+  PHP_DOWNLOAD_PATH: https://github.com/NetherGamesMC/php-build-scripts/releases/download/8.2/Linux.zip
+  PHP_DOWNLOAD_NAME: Linux.zip
+  PHP_ARTIFACT_NAME: PHP_Linux-x86_64.tar.gz
   PHP_PATH: ./bin/php7/bin
-  PHP_BINARY_PATH: ./bin/php7/bin/php
+  PHP_BINARY_PATH: ./bin/php7/bin/php -dphar.readonly=0
 jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Download PHP
-        run: wget "https://jenkins.pmmp.io/job/PHP-8.0-Aggregate/lastSuccessfulBuild/artifact/${{ env.PHP_ARTIFACT_NAME }}"
+        run: wget ${{ env.PHP_DOWNLOAD_PATH }}
+      - name: Unzip PHP
+        run: unzip ${{ env.PHP_DOWNLOAD_NAME }} -d ./
       - name: Untar PHP
         run: tar -xzvf ${{ env.PHP_ARTIFACT_NAME }} -C ./
       - name: Install Composer
