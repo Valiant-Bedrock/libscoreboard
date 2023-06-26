@@ -24,4 +24,4 @@ jobs:
         run: ${{ env.PHP_BINARY_PATH }} composer.phar install --prefer-dist --no-interaction
       # PHPStan
       - name: Run PHPStan
-        run: ./vendor/bin/phpstan analyze
+        run: ${{ env.PHP_BINARY_PATH }} ./vendor/bin/phpstan analyze
