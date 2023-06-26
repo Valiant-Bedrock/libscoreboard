@@ -1,13 +1,11 @@
 <?php
 /**
+ * Copyright (C) 2020 - 2023 | Valiant Network
  *
- * Copyright (C) 2020 - 2022 | Matthew Jordan
- *
- * This program is private software. You may not redistribute this software, or
- * any derivative works of this software, in source or binary form, without
- * the express permission of the owner.
- *
- * @author sylvrs
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  */
 declare(strict_types=1);
 
@@ -25,7 +23,6 @@ use pocketmine\player\Player;
 use RuntimeException;
 
 class Scoreboard {
-
 	public const MAX_LINE_COUNT = 15;
 	/** Constants used when sending the scoreboard to a player */
 	protected const OBJECTIVE_NAME = "scoreboard";
@@ -37,8 +34,6 @@ class Scoreboard {
 	protected bool $visible = false;
 
 	/**
-	 * @param Player $player
-	 * @param string $title
 	 * @param array<int, string> $lines
 	 */
 	public function __construct(
@@ -54,25 +49,20 @@ class Scoreboard {
 
 	/**
 	 * This method sends the scoreboard to the player if not visible
-	 *
-	 * @param DisplaySlot|null $slot
-	 * @param SortOrder|null $order
-	 * @return void
 	 */
 	public function send(?DisplaySlot $slot = null, ?SortOrder $order = null): void {
-		// If no arguments are passed, we'll set default ones
-		$slot = $slot ?? DisplaySlot::SIDEBAR();
-		$order = $order ?? SortOrder::ASCENDING();
 		if($this->visible || !$this->player->isConnected()) {
 			return;
 		}
 
+		$slot = $slot ?? DisplaySlot::SIDEBAR;
+		$order = $order ?? SortOrder::ASCENDING;
 		$this->player->getNetworkSession()->sendDataPacket(SetDisplayObjectivePacket::create(
-			displaySlot: $slot->name(),
+			displaySlot: $slot->value,
 			objectiveName: self::OBJECTIVE_NAME,
 			displayName: $this->title,
 			criteriaName: self::CRITERIA_NAME,
-			sortOrder: $order->ordinal(),
+			sortOrder: $order->value,
 		));
 
 		// Update scoreboard properties as needed
@@ -83,8 +73,6 @@ class Scoreboard {
 
 	/**
 	 * This method removes the scoreboard from the client (if visible)
-	 *
-	 * @return void
 	 */
 	public function remove(): void {
 		if(!$this->visible || !$this->player->isConnected()) {
@@ -99,37 +87,20 @@ class Scoreboard {
 		$this->visible = false;
 	}
 
-	/**
-	 * This method updates the current sorting order
-	 *
-	 * @param SortOrder $order
-	 * @param bool $update
-	 * @return void
-	 */
 	public function setSortOrder(SortOrder $order, bool $update = true): void {
 		$this->currentOrder = $order;
 		if($this->visible && $update) $this->update();
 	}
 
-	/**
-	 * This method updates the current display slot
-	 *
-	 * @param DisplaySlot $slot
-	 * @param bool $update
-	 * @return void
-	 */
 	public function setDisplaySlot(DisplaySlot $slot, bool $update = true): void {
 		$this->currentSlot = $slot;
 		if($this->visible && $update) $this->update();
 	}
 
 	/**
-	 * This method sets the lines of the scoreboard
-	 *
+	 * This method sets an array of lines to the scoreboard, clears if specified, and updates if specified
 	 * @param array<int, string> $lines
 	 * @param bool $clear - If true, will clear the scoreboard before setting the new lines
-	 * @param bool $update
-	 * @return void
 	 */
 	public function setLines(array $lines, bool $clear = true, bool $update = true): void {
 		if (!$this->player->isConnected()) {
@@ -153,12 +124,7 @@ class Scoreboard {
 	}
 
 	/**
-	 * This method sets a single line on the scoreboard
-	 *
-	 * @param int $index
-	 * @param string $value
-	 * @param bool $update
-	 * @return void
+	 * This method sets a line with the given index to the given value on the scoreboard and updates it if specified
 	 */
 	public function setLine(int $index, string $value, bool $update = true): void {
 		if (!$this->player->isConnected()) {
@@ -183,11 +149,7 @@ class Scoreboard {
 	}
 
 	/**
-	 * This method removes a line from the scoreboard
-	 *
-	 * @param int $index
-	 * @param bool $update
-	 * @return void
+	 * This method removes a line from the scoreboard and updates it if specified
 	 */
 	public function removeLine(int $index, bool $update = true): void {
 		if($index < 0 or $index >= self::MAX_LINE_COUNT) {
@@ -206,10 +168,7 @@ class Scoreboard {
 	}
 
 	/**
-	 * This method clears the scoreboard
-	 *
-	 * @param bool $update
-	 * @return void
+	 * This method removes all the lines from the player's scoreboard
 	 */
 	public function clear(bool $update = true): void {
 		if (!$this->player->isConnected()) {
@@ -230,7 +189,6 @@ class Scoreboard {
 
 	/**
 	 * This method attempts to update the scoreboard with the current values
-	 *
 	 * @throws ScoreboardNotVisibleException - If the scoreboard isn't visible, this exception will be thrown
 	 */
 	public function update(): void {
@@ -241,21 +199,17 @@ class Scoreboard {
 			return;
 		}
 		$this->player->getNetworkSession()->sendDataPacket(SetDisplayObjectivePacket::create(
-			displaySlot: $this->currentSlot?->name() ?? throw new RuntimeException("Scoreboard slot is not set"),
+			displaySlot: $this->currentSlot?->value ?? throw new RuntimeException("Scoreboard slot is not set"),
 			objectiveName: self::OBJECTIVE_NAME,
 			displayName: $this->title,
 			criteriaName: self::CRITERIA_NAME,
-			sortOrder: $this->currentOrder?->ordinal() ?? throw new RuntimeException("Scoreboard order is not set")
+			sortOrder: $this->currentOrder?->value ?? throw new RuntimeException("Scoreboard order is not set")
 		));
 	}
 
 	/**
 	 * Given an index and string value, this static method will create a score packet entry
 	 * This method is mainly used to create entries for the scoreboard
-	 *
-	 * @param int $index
-	 * @param string $value
-	 * @return ScorePacketEntry
 	 */
 	protected static function createEntry(int $index, string $value): ScorePacketEntry {
 		$entry = new ScorePacketEntry();

@@ -1,33 +1,18 @@
 <?php
 /**
+ * Copyright (C) 2020 - 2023 | Valiant Network
  *
- * Copyright (C) 2020 - 2022 | Matthew Jordan
- *
- * This program is private software. You may not redistribute this software, or
- * any derivative works of this software, in source or binary form, without
- * the express permission of the owner.
- *
- * @author sylvrs
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  */
 declare(strict_types=1);
 
 namespace libscoreboard\enums;
 
-use pocketmine\utils\EnumTrait;
-
-/**
- * @method static DisplaySlot BELOWNAME()
- * @method static DisplaySlot LIST()
- * @method static DisplaySlot SIDEBAR()
- */
-class DisplaySlot{
-	use EnumTrait;
-
-	protected static function setup(): void {
-		self::registerAll(
-			new DisplaySlot("belowname"),
-			new DisplaySlot("list"),
-			new DisplaySlot("sidebar")
-		);
-	}
+enum DisplaySlot: string {
+	case BELOW_NAME = "belowname";
+	case LIST = "list";
+	case SIDEBAR = "sidebar";
 }
