@@ -1,13 +1,11 @@
 <?php
 /**
+ * Copyright (C) 2020 - 2023 | Valiant Network
  *
- * Copyright (C) 2020 - 2022 | Matthew Jordan
- *
- * This program is private software. You may not redistribute this software, or
- * any derivative works of this software, in source or binary form, without
- * the express permission of the owner.
- *
- * @author sylvrs
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  */
 declare(strict_types=1);
 
@@ -15,6 +13,5 @@ namespace libscoreboard\exceptions;
 
 use RuntimeException;
 
-class ScoreboardNotVisibleException extends RuntimeException {
-
+final class ScoreboardNotVisibleException extends RuntimeException {
 }
