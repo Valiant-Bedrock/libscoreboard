@@ -2,7 +2,7 @@ name: Continuous Integration
 on: [push]
 env:
   # PHP environment variables used for downloading, extraction, and running PHP
-  PHP_DOWNLOAD_PATH: https://github.com/NetherGamesMC/php-build-scripts/releases/download/8.2/Linux.zip
+  PHP_DOWNLOAD_PATH: https://github.com/NetherGamesMC/php-build-scripts/releases/download/8.2-pm5/Linux.zip
   PHP_DOWNLOAD_NAME: Linux.zip
   PHP_ARTIFACT_NAME: PHP_Linux-x86_64.tar.gz
   PHP_PATH: ./bin/php7/bin
